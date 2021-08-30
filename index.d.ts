@@ -10,13 +10,13 @@
  * _Func.delay(text => console.log(text), 1000, 'later')
  * // => Logs 'later' after one second.
  */
-export function delay(func: Function, wait: number, ...args: any[]): number;
+export function delay(func: () => any, wait: number, ...args: any[]): number;
 
 /**
  * @param {*} func The function to run.
  * @param {...*} [args] The arguments to invoke `func` with.
  */
-export function safelyRun(func: any, ...args: any[]): any;
+export function safelyRun(func: () => any, ...args: any[]): any;
 
 /**
  * Returns a function that will only run N milliseconds after it stops being called.
@@ -32,7 +32,7 @@ export function safelyRun(func: any, ...args: any[]): any;
  * window.addEventListener('scroll', debouncedFunction);
  */
 export function debounce(
-	fn: Function,
+	fn: () => any,
 	interval?: number,
 	{
 		leading,
@@ -56,7 +56,7 @@ export function debounce(
  * filter([1, 2, 3, 4, 5, 6], _Func.negate(isEven))
  * // => [1, 3, 5]
  */
-export function negate(predicate: Function): Function;
+export function negate(predicate: () => any): () => any;
 
 /**
  * Creates a function that invokes `func` with its arguments transformed.
@@ -82,7 +82,7 @@ export function negate(predicate: Function): Function;
  * func(10, 5)
  * // => [100, 10]
  */
-export function overArgs(func: Function, transforms: Function[]): Function;
+export function overArgs(func: () => any, transforms: () => any[]): () => any;
 
 /**
  * @param {number} milliseconds The function to run.
@@ -91,34 +91,36 @@ export function overArgs(func: Function, transforms: Function[]): Function;
  */
 export function waitTime(
 	milliseconds: number,
-	callback?: Function,
+	callback?: () => any,
 ): Promise<void>;
+
 /**
  * @param {Function} condition The function to run
  * @param {Number} [time] time.
  * @param {Number} [maxTimes] max times.
  */
 export function waitFor(
-	condition: Function,
+	condition: () => any,
 	time?: number,
 	maxTimes?: number,
 ): {
 	promise: Promise<any>;
 	stop: () => void;
 };
+
 /**
  * @param {Function} func The function to run.
  * @param {Number} [limitTimes] Max retry number.
  * @param {...*} [args] Arguments to pass to the function
  */
 export function retry(
-	func: Function,
+	func: () => any,
 	limitTimes?: number,
 	...args: any[]
 ): Promise<any>;
 
 /**
- * Mock promise, Useful for testing asynchronous functions.
+ * Mock promise, useful for testing asynchronous functions.
  * @param {Number} time
  * @param {String | Function} response
  * @param {Boolean} fail
@@ -131,12 +133,12 @@ export function retry(
  */
 export function mock(
 	time: number,
-	response: string | Function,
+	response: string | (() => any),
 	fail?: boolean,
 ): Promise<any>;
-export function times(n: number, iteratee: Function): any[];
+export function times(n: number, iteratee: () => any): any[];
 export function asyncRetry(
-	fn: Function,
+	fn: () => any,
 	maxAttempts: number,
 	options?: {
 		backoff?: number;
@@ -156,8 +158,8 @@ export function asyncRetry(
  * @param {Number} [waitTime] - Amount of [ms] to wait until resolving or rejecting each promise.
  */
 export function mockFactory(
-	onSuccess: number | string | Function,
-	onFailure: number | string | Function,
+	onSuccess: number | string | (() => any),
+	onFailure: number | string | (() => any),
 	countdownToSuccess?: number,
 	waitTime?: number,
 ): () => Promise<any>;

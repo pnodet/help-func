@@ -1,5 +1,5 @@
 # help-func
-> SSmall js package I use to help me deal with functions
+> Small js package I use to help me deal with functions
 
 [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/xojs/xo)
 [![GitHub workflow status](https://img.shields.io/github/workflow/status/pnxdxt/help-func/CI)](https://github.com/pnxdxt/help-func)
@@ -40,6 +40,29 @@ debounce([1,2,3], (element) => typeof element === 'string');
 debounce(['1', '2', '3'], (element) => typeof element === 'string');
 //=> true
 ```
+
+## Functions
+
+
+`delay` : Invokes `func` after `wait` milliseconds. Any additional arguments are provided to `func` when it's invoked.
+
+`safelyRun` : 
+
+`debounce` : Returns a function that will only run `n` milliseconds after it stops being called.
+
+`negate` : Creates a function that negates the result of the predicate `func`.
+
+`overArgs` : Creates a function that invokes `func` with its arguments transformed.
+
+`waitTime` : 
+
+`waitFor` : 
+
+`retry` : 
+
+`mock` : Mock promise, useful for testing asynchronous functions.
+
+`mockFactory` :
 
 ## License
 

@@ -1,7 +1,8 @@
 import test from 'ava';
-import main from './index.js';
+import * as helpFunc from './index.js';
 
 test('main()', (t) => {
-	t.is(main('hello'), true);
-	t.is(main(223), false);
+	const sum = (a, b) => a + b;
+	helpFunc.safelyRun(sum, [1, 2]);
+	t.pass();
 });

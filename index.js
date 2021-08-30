@@ -1,4 +1,5 @@
-const isFunc = (object) => this.getType(object) === 'function';
+/* eslint-disable no-await-in-loop, no-unused-expressions */
+const isFunction = (value) => typeof value === 'function';
 
 /** Used as references for various `Number` constants. */
 const MAX_SAFE_INTEGER = 9_007_199_254_740_991;
@@ -15,7 +16,7 @@ export function delay(func, wait, ...args) {
 export function safelyRun(func, ...args) {
 	let result = null;
 
-	if (isFunc(func)) {
+	if (isFunction(func)) {
 		result = func(...args);
 	}
 
@@ -28,13 +29,12 @@ export function debounce(fn, interval, {leading} = {}) {
 	const timer = typeof interval === 'number' ? interval : 200;
 	const lead = typeof leading === 'boolean' ? leading : false;
 	return (...args) => {
-		const context = this;
 		const postponed = () => {
 			timeout = null;
 			if (lead) {
 				leadExecuted = false;
 			} else {
-				fn.apply(context, args);
+				fn.apply(this, args);
 			}
 		};
 
@@ -42,7 +42,7 @@ export function debounce(fn, interval, {leading} = {}) {
 		timeout = setTimeout(postponed, timer);
 		if (lead && !leadExecuted) {
 			leadExecuted = true;
-			fn.apply(context, args);
+			fn.apply(this, args);
 		}
 	};
 }
@@ -77,7 +77,7 @@ export const times = (n, iteratee) => {
 
 	let index = -1;
 	const length = Math.min(n, MAX_ARRAY_LENGTH);
-	const result = new Array(length);
+	const result = Array.from({length});
 	while (++index < length) {
 		result[index] = iteratee(index);
 	}
@@ -92,7 +92,7 @@ export const times = (n, iteratee) => {
 };
 
 export function waitTime(milliseconds, callback) {
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve) => {
 		setTimeout(() => {
 			callback && callback();
 			resolve();
@@ -142,23 +142,23 @@ export async function retry(func, limitTimes = 3, ...args) {
 }
 
 export function mock(time, response, fail = false) {
-	let res;
+	let result;
 	const t = typeof time === 'number' ? time : 50;
 
-	if (typeof response !== 'function') {
-		const ans = !response ? t : response;
-		res = () => ans;
+	if (typeof response === 'function') {
+		result = response;
 	} else {
-		res = response;
+		const ans = response ? response : t;
+		result = () => ans;
 	}
 
 	return new Promise((resolve, reject) => {
 		setTimeout(() => {
 			if (fail) {
-				reject(res());
+				reject(result());
 			}
 
-			return resolve(res());
+			return resolve(result());
 		}, t);
 	});
 }
@@ -166,7 +166,7 @@ export function mock(time, response, fail = false) {
 export const asyncRetry = async (
 	fn,
 	maxAttempts,
-	options = {backoff: 2000, backoffPower: 1.25},
+	{backoff = 2000, backoffPower = 1.25},
 ) => {
 	const execute = async (attempt) => {
 		try {
@@ -175,7 +175,7 @@ export const asyncRetry = async (
 			if (attempt <= maxAttempts) {
 				const nextAttempt = attempt + 1;
 				const delayInSeconds = Math.round(
-					(options.backoff * nextAttempt ** options.backoffPower) / 1000,
+					(backoff * nextAttempt ** backoffPower) / 1000,
 				);
 				console.warn(`Retrying after ${delayInSeconds} seconds due to:`, error);
 				return mock(delayInSeconds * 1000, () => execute(nextAttempt));
