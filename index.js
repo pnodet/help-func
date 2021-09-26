@@ -1,5 +1,5 @@
 /* eslint-disable no-await-in-loop, no-unused-expressions */
-const isFunction = (value) => typeof value === 'function';
+const isFunction = value => typeof value === 'function';
 
 /** Used as references for various `Number` constants. */
 const MAX_SAFE_INTEGER = 9_007_199_254_740_991;
@@ -92,7 +92,7 @@ export const times = (n, iteratee) => {
 };
 
 export function waitTime(milliseconds, callback) {
-	return new Promise((resolve) => {
+	return new Promise(resolve => {
 		setTimeout(() => {
 			callback && callback();
 			resolve();
@@ -168,7 +168,7 @@ export const asyncRetry = async (
 	maxAttempts,
 	{backoff = 2000, backoffPower = 1.25},
 ) => {
-	const execute = async (attempt) => {
+	const execute = async attempt => {
 		try {
 			return await fn();
 		} catch (error) {
